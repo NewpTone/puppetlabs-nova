@@ -5,19 +5,19 @@ class nova::params {
   case $::osfamily {
     'RedHat': {
       # package names
-      $api_package_name         = false
-      $cert_package_name        = false
-      $common_package_name      = 'openstack-nova'
-      $compute_package_name     = false
-      $consoleauth_package_name = false
+      $api_package_name         = 'openstack-nova-api'
+      $cert_package_name        = 'openstack-nova-cert'
+      $common_package_name      = 'openstack-nova-common'
+      $compute_package_name     = 'openstack-nova-compute'
+      $consoleauth_package_name = 'openstack-nova-console'
       $doc_package_name         = 'openstack-nova-doc'
       $libvirt_package_name     = 'libvirt'
-      $network_package_name     = false
+      $network_package_name     = 'openstack-nova-network'
       $numpy_package_name       = 'numpy'
-      $objectstore_package_name = false
-      $scheduler_package_name   = false
+      $objectstore_package_name = 'openstack-nova-objectstore'
+      $scheduler_package_name   = 'openstack-nova-scheduler'
       $tgt_package_name         = 'scsi-target-utils'
-      $volume_package_name      = false
+      $volume_package_name      = 'openstack-nova-volume'
       $vncproxy_package_name    = 'openstack-nova-novncproxy'
       # service names
       $api_service_name         = 'openstack-nova-api'
@@ -46,7 +46,7 @@ class nova::params {
       $doc_package_name         = 'nova-doc'
       $libvirt_package_name     = 'libvirt-bin'
       $network_package_name     = 'nova-network'
-      $vncproxy_package_name    = 'novnc'
+      $vncproxy_package_name    = ['novnc', 'nova-novncproxy']
       $numpy_package_name       = 'python-numpy'
       $objectstore_package_name = 'nova-objectstore'
       $scheduler_package_name   = 'nova-scheduler'
@@ -59,7 +59,7 @@ class nova::params {
       $consoleauth_service_name = 'nova-consoleauth'
       $libvirt_service_name     = 'libvirt-bin'
       $network_service_name     = 'nova-network'
-      $vncproxy_service_name    = 'novnc'
+      $vncproxy_service_name    = 'nova-novncproxy'
       $objectstore_service_name = 'nova-objectstore'
       $scheduler_service_name   = 'nova-scheduler'
       $volume_service_name      = 'nova-volume'
@@ -67,7 +67,7 @@ class nova::params {
       # debian specific nova config
       $root_helper              = 'sudo nova-rootwrap'
       $lock_path                = '/var/lock/nova'
-      $nova_db_charset          = 'utf8'
+      $nova_db_charset          = 'latin1'
       case $::operatingsystem {
         'Debian': {
           $consoleauth_package_name = 'nova-console'
