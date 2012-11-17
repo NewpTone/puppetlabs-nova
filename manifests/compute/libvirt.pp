@@ -15,6 +15,14 @@ class nova::compute::libvirt (
     }
   }
 
+  if $migration_support {
+    if $vncserver_listen != '0.0.0.0' {
+      fail("For migration support to work, you MUST set vncserver_listen to '0.0.0.0'")
+    } else {
+      class { 'nova::migration::libvirt': }
+    }
+  }
+
   package { 'libvirt':
     name   => $::nova::params::libvirt_package_name,
     ensure => present,
@@ -27,27 +35,10 @@ class nova::compute::libvirt (
     require  => Package['libvirt'],
   }
 
-  case $libvirt_type {
-    'kvm': {
-      package { $::nova::params::libvirt_type_kvm:
-        ensure => present,
-        before => Package['nova-compute'],
-      }
-    }
-  }
-
   nova_config {
     'compute_driver':   value => 'libvirt.LibvirtDriver';
     'libvirt_type':     value => $libvirt_type;
     'connection_type':  value => 'libvirt';
     'vncserver_listen': value => $vncserver_listen;
-  }
-
-  if $migration_support {
-    if $vncserver_listen != '0.0.0.0' {
-      fail("For migration support to work, you MUST set vncserver_listen to '0.0.0.0'")
-    } else {
-      class { 'nova::migration::libvirt': }
-    }
   }
 }
