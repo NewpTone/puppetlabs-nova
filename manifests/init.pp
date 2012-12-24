@@ -108,6 +108,16 @@ class nova(
     system  => true,
     require => Package['nova-common'],
   }
+  
+  # mkdir the state_path, if it not use the default directory.
+  file {'state_path':
+    ensure  => directory,
+    path    => $state_path,
+    mode    => '0640',
+    owner   => 'nova',
+    group   => 'nova',
+    require => [Group['nova'],User['nova']],
+  }
 
   file { $logdir:
     ensure  => directory,
@@ -177,8 +187,7 @@ class nova(
     'service_down_time': value => $service_down_time;
     'rootwrap_config':  value => $rootwrap_config;
   }
-
-
+  
   if $monitoring_notifications {
     nova_config {
       'notification_driver': value => 'nova.notifier.rabbit_notifier'
