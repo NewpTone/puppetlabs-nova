@@ -109,6 +109,18 @@ class nova(
     require => Package['nova-common'],
   }
 
+  # mkdir the state_path, if we don't use the default directory.
+  if ($state_path != '/var/lib/nova') {
+      file { 'state_path':
+        ensure  => directory,
+        path    => $state_path,
+        mode    => '0640',
+        owner   => 'nova',
+        group   => 'nova',
+        require => [Group['nova'], User['nova']],
+      }   
+  }
+
   file { $logdir:
     ensure  => directory,
     mode    => '0751',
